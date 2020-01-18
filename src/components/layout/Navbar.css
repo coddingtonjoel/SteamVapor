@@ -1,0 +1,16 @@
+.navbar {
+    background: rgba(0,0,0,0.84);
+    font-size: 20px;
+    font-family: 'PT Sans', sans-serif;
+}
+
+.nav-header {
+    margin-bottom: 10px;
+    letter-spacing: 4px;
+}
+
+.fa-steam {
+    padding: 5px 5px 5px 15px;
+    margin-top: 10px;
+    font-size: 20px;
+}
