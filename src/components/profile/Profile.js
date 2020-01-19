@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 const Profile = (props) => {
+
         return (
             <div className={"profile"}>
                 <img className={"avatar"} src={props.user.avatarUrl} alt=""/>

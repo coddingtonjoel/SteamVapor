@@ -30,7 +30,7 @@
 .profile {
     text-align: center;
     border: 1px #999 solid;
-    box-shadow: 2px 2px #999;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 8px;
     background: rgb(161,161,161);
     background: linear-gradient(90deg, rgba(161,161,161,1) 0%, rgba(196,196,196,1) 100%);

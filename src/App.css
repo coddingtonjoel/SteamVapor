@@ -10,3 +10,18 @@ body {
     margin-right: auto;
     margin-left: auto;
 }
+
+.search-bar {
+    margin: 20px auto 40px auto;
+    width: 25%;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: 'PT-Sans', sans-serif;
+    background: #ddd;
+    transition: 0.5s;
+}
+
+.search-bar:focus {
+    transform: scale(1.05);
+    background: #fff;
+}
