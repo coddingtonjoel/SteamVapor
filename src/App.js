@@ -14,7 +14,7 @@ class App extends Component {
     };
 
     componentDidMount() {
-        fetch('https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + this.api.key + '&steamids=' + this.api.id, {mode: "cors"}).then(res => console.log(res.data));
+        fetch('https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + this.api.key + '&steamids=' + this.api.id, {mode: "cors"}).then(res => console.log(res.data));
     }
 
     render() {
