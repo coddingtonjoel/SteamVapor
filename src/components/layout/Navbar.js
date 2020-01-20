@@ -6,6 +6,7 @@ const Navbar = (props) => {
         <div className={"navbar bg-primary sticky-top"}>
             <i className="fab fa-steam"/>
             <span className={"nav-header"}>{props.title}</span>
+            <p className={"subtitle"}>SteamID-64 Search Engine</p>
         </div>
     );
 };

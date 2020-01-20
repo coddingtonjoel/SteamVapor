@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component, Fragment} from 'react'
 import Navbar from "./components/layout/Navbar"
 import Users from "./components/profile/Users"
 import "./App.css";
@@ -21,55 +21,98 @@ function doCORSRequest(options, getResult) {
 }
 
 class App extends Component {
-    //function to fetch API while bypassing CORS; from https://github.com/Rob--W/cors-anywhere/blob/master/demo.html
-    getAPI = (url) => {
-        doCORSRequest({
-            url: url
-        }, this.addUserInfo);
-    };
-
     state = {
-      users: [],
-      loading: false,
+        users: [{
+            name: "Input a SteamID-64 to Begin!"
+        }],
+        loading: false
     };
 
     api = {
-        key: "4E6ADE42223909E74302F1FC6694E58C",
-        steamID: 76561198103184138
+        key: "4E6ADE42223909E74302F1FC6694E58C"
+    };
+
+    //function to fetch API while bypassing CORS; from https://github.com/Rob--W/cors-anywhere/blob/master/demo.html
+    getAPI = (url) => {
+        this.setState({loading: true});
+        doCORSRequest({
+            url: url
+        }, this.addUserInfo);
+        this.setState({loading: false});
+
     };
 
     addUserInfo = (result) => {
-        let newUser = JSON.parse(result);
+        if (result === "{\"response\":{\"players\":[]}}") {
+            this.setState({
+                users: [
+                    {
+                        name: "SteamID-64 not recognized.",
+                        lastLogoff: "",
+                        profileUrl: false
+                    }
+                ]
+            });
+        }
+        else {
+            let newUser = JSON.parse(result);
+            const name = newUser.response.players[0].personaname;
+            const avatar = newUser.response.players[0].avatarfull;
+            const url = newUser.response.players[0].profileurl;
+            const lastLogoffUNIX = newUser.response.players[0].lastlogoff;
 
-        const name = newUser.response.players[0].personaname;
-        const avatar = newUser.response.players[0].avatarfull;
-        const url = newUser.response.players[0].profileurl;
+            //converting UNIX timestamp from API to nicely formatted date, time, & timezone
+            if (Number.isInteger(lastLogoffUNIX)) {
+                const timestamp = require('unix-timestamp');
+                const lastLogoffUTC = timestamp.toDate(lastLogoffUNIX).toString();
+                const lastLogoffDate = lastLogoffUTC.slice(0, 16);
+                const lastLogoffTime = lastLogoffUTC.slice(17, 21);
+                const lastLogoff = lastLogoffDate + " @ " + lastLogoffTime;
 
-        this.setState({users: [
-                {
-                    name: name,
-                    avatarUrl: avatar,
-                    profileUrl: url
-                }
-            ]});
+                this.setState({
+                    users: [
+                        {
+                            name: name,
+                            avatarUrl: avatar,
+                            profileUrl: url,
+                            lastLogoff: ("Last Logoff: " + lastLogoff + " (PDT)")
+                        }
+                    ]
+                });
+                //in the rare event that the JSON does not include lastlogoff key
+            } else {
+                this.setState({
+                    users: [
+                        {
+                            name: name,
+                            avatarUrl: avatar,
+                            profileUrl: url,
+                            lastLogoff: "Last Logoff: null"
+                        }
+                    ]
+                });
+            }
+        }
     };
 
-    componentDidMount() {
-        this.setState({loading: true});
-        this.getAPI("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + this.api.key + "&steamids=" + this.api.steamID);
-    }
-
-    userTypedHandler(event) {
-        if (event.target.value !== "")
-            this.api.steamID = event.target.value;
-    }
+    userTypedHandler = (event) => {
+        let idToSearch = event.target.value;
+        this.getAPI("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + this.api.key + "&steamids=" + idToSearch);
+        this.setState({
+            users: [
+                {
+                    name: "SteamID-64 not recognized.",
+                    profileUrl: false
+                }]
+        });
+    };
 
     render() {
         return (
             <Fragment>
                 <Navbar title={"STEAMVAPOR"}/>
                 <div className="container">
-                    <input type="text" onChange={this.userTypedHandler} className={"search-bar form-control"} placeholder={"Steam Username Lookup"}/>
+                    <input type="text" onPaste={this.userTypedHandler} onChange={this.userTypedHandler} className={"search-bar form-control"} maxLength={17} placeholder={"SteamID-64 (17 Digits)"}/>
                     <Users loading={this.state.loading} users={this.state.users}/>
                 </div>
             </Fragment>
