@@ -42,6 +42,7 @@ class App extends Component {
 
     };
 
+    //default API response for IDs without accounts linked to them
     addUserInfo = (result) => {
         if (result === "{\"response\":{\"players\":[]}}") {
             this.setState({
@@ -54,6 +55,7 @@ class App extends Component {
                 ]
             });
         }
+        //parsing the returned JSON
         else {
             let newUser = JSON.parse(result);
             const name = newUser.response.players[0].personaname;
@@ -97,14 +99,19 @@ class App extends Component {
 
     userTypedHandler = (event) => {
         let idToSearch = event.target.value;
-        this.getAPI("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + this.api.key + "&steamids=" + idToSearch);
-        this.setState({
-            users: [
-                {
-                    name: "SteamID-64 not recognized.",
-                    profileUrl: false
-                }]
-        });
+        if (idToSearch.length !== 17) {
+            this.setState({
+                users: [
+                    {
+                        name: (17 - idToSearch.length) + " digit(s) remaining..."
+                    }
+                ]
+            })
+        }
+        else {
+            this.setState({ loading: true });
+            this.getAPI("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + this.api.key + "&steamids=" + idToSearch);
+        }
     };
 
     render() {
