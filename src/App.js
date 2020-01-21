@@ -29,7 +29,7 @@ class App extends Component {
     };
 
     api = {
-        key: "4E6ADE42223909E74302F1FC6694E58C"
+        key: process.env.REACT_APP_STEAM_API_KEY
     };
 
     //function to fetch API while bypassing CORS; from https://github.com/Rob--W/cors-anywhere/blob/master/demo.html
