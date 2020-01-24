@@ -12,8 +12,7 @@ const Users = (props) => {
 };
 
 Users.propTypes = {
-    loading: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
+    loading: PropTypes.bool.isRequired
 };
 
 export default Users;
